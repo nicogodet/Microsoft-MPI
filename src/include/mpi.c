@@ -3,10 +3,10 @@
 #include <windows.h>
 
 #if defined(CC)
-	#define C "cc.exe"
+	#define C "gcc.exe"
 	#define E "MPICC"
 #elif defined(CXX)
-	#define C "c++.exe"
+	#define C "g++.exe"
 	#define E "MPICXX"
 #elif defined(FC)
 	#define C "gfortran.exe"
@@ -15,22 +15,30 @@
 	#error
 #endif
 
+#define SZ 32767
+
 int main(int argc, char** argv) {
-	int s = strlen(argv[0]);
-	while(argv[0][s] != '\\' && argv[0][s] != '/') --s; --s;
-	while(argv[0][s] != '\\' && argv[0][s] != '/') --s;
-	argv[0][s] = '\0';
-        // Force forward slash as a file name separator
-        s = strlen(argv[0]);
-        while(s >= 0) if(argv[0][s--] == '\\') argv[0][s+1] = '/';
-#define SZ 32767	
-	char* lpath = malloc(SZ*sizeof(char));
-	snprintf(lpath, SZ, "-L%s/lib", argv[0]);
-	char* ipath = malloc(SZ*sizeof(char));
-	snprintf(ipath, SZ, "-I%s/include", argv[0]);
-	char* comp = malloc(SZ*sizeof(char));
-	char** args = malloc(SZ*sizeof(char*));
+	// Get executable path
+	char path[MAX_PATH];
+	GetModuleFileNameA(NULL, path, MAX_PATH);
+	int s = strlen(path);
+	// Strip exe filename and move up one folder to go out of the "bin" directory
+	while (path[s] != '\\' && path[s] != '/') --s; --s;
+	while (path[s] != '\\' && path[s] != '/') --s;
+	path[s] = '\0';
+	// Force forward slash as directory separator
+	s = strlen(path);
+	while (s >= 0) if (path[s--] == '\\') path[s + 1] = '/';
+	// Set library and include directories
+	char* lpath = malloc(SZ * sizeof(char));
+	snprintf(lpath, SZ, "-L%s/lib", path);
+	char* ipath = malloc(SZ * sizeof(char));
+	snprintf(ipath, SZ, "-I%s/include", path);
+	// Get compiler name and check for the presence of the "show" argument
+	char* comp = malloc(SZ * sizeof(char));
 	int show = (argc == 2 && strcmp(argv[1], "-show") == 0);
+	// Fill compiler arguments
+	char** args = malloc(SZ * sizeof(char*));
 	int i = 0;
 	args[i++] = GetEnvironmentVariable(E, comp, SZ) > 0 ? comp : C;
 	args[i++] = ipath;
@@ -43,10 +51,9 @@ int main(int argc, char** argv) {
 	args[i++] = "-fallow-argument-mismatch";
 #endif
 #endif
-
 	if(!show) for(int x = 1; x < argc; ++x) args[i++] = argv[x];
 	args[i++] = lpath;
-	args[i++] = "-l:libmsmpi.dll.a";
+	args[i++] = "-lmsmpi";
 	args[i] = NULL;
 	if(show) {
 		for(int x = 0; args[x]; ++x) printf("%s ", args[x]);
