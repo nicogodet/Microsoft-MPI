@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
 	while (s >= 0) if (path[s--] == '\\') path[s + 1] = '/';
 	// Set library and include directories
 	char* lpath = malloc(SZ * sizeof(char));
-	snprintf(lpath, SZ, "-L%s/lib", path);
+	snprintf(lpath, SZ, "-L%s/bin", path);
 	char* ipath = malloc(SZ * sizeof(char));
 	snprintf(ipath, SZ, "-I%s/include", path);
 	// Get compiler name and check for the presence of the "show" argument
