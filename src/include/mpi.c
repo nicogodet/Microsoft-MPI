@@ -34,6 +34,16 @@ int main(int argc, char** argv) {
 	int i = 0;
 	args[i++] = GetEnvironmentVariable(E, comp, SZ) > 0 ? comp : C;
 	args[i++] = ipath;
+#ifdef FC
+	// Workaround for GFortran
+	args[i++] = "-fno-range-check";
+#if __GNUC__ >= 10
+	// More workarounds for GFortran 10 increased strickness
+	args[i++] = "-fallow-invalid-boz";
+	args[i++] = "-fallow-argument-mismatch";
+#endif
+#endif
+
 	if(!show) for(int x = 1; x < argc; ++x) args[i++] = argv[x];
 	args[i++] = lpath;
 	args[i++] = "-l:libmsmpi.dll.a";
