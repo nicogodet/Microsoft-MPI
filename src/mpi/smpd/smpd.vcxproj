@@ -2,24 +2,31 @@
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="$(SrcRoot)\mpi.props" />
-
   <PropertyGroup>
     <AssemblyDescription>Microsoft MPI Process Manager</AssemblyDescription>
   </PropertyGroup>
-
   <PropertyGroup Label="Globals">
     <TargetName>smpd</TargetName>
     <ProjectGuid>{b7c11a21-deb2-48e4-ac9c-13e327a02c5f}</ProjectGuid>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-
   <PropertyGroup Label="Configuration">
     <UseDebugLibraries>false</UseDebugLibraries>
     <ConfigurationType>Application</ConfigurationType>
   </PropertyGroup>
-
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-
   <ItemDefinitionGroup>
     <ClCompile>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -35,7 +42,6 @@
         .\$(O)
       </AdditionalIncludeDirectories>
     </ClCompile>
-
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -62,18 +68,15 @@
       </AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-
   <ItemGroup>
     <ProjectReference Include="$(MPI_SRC_ROOT)\common\mpicommon.vcxproj" />
     <ProjectReference Include="$(MPI_SRC_ROOT)\pmilib\lib\pmilib.vcxproj" />
     <ProjectReference Include="$(MPI_SRC_ROOT)\stub\mpistub.vcxproj" />
   </ItemGroup>
-
   <ItemGroup>
     <ClCompile Include=".\affinity_calculation.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
-
     <ClCompile Include=".\mgr_abort.cpp" />
     <ClCompile Include=".\mgr_start_mgr.cpp" />
     <ClCompile Include=".\smpd.cpp" />
@@ -84,11 +87,9 @@
     <ClCompile Include=".\smpd_launch_process.cpp" />
     <ClCompile Include=".\smpd_redirect.cpp" />
   </ItemGroup>
-
   <PropertyGroup>
     <StagingOutputPath>$(MPI_BIN_DESTINATION)</StagingOutputPath>
     <OutFileType>*.exe</OutFileType>
   </PropertyGroup>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

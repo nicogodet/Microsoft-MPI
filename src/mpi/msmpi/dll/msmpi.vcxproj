@@ -2,19 +2,27 @@
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="..\msmpi.props" />
-
   <PropertyGroup Label="Globals">
     <TargetName>msmpi</TargetName>
     <ProjectGuid>{d31839a6-d2db-4ade-8348-4dd3f9d4d12f}</ProjectGuid>
   </PropertyGroup>
-
   <PropertyGroup Label="Configuration">
     <UseDebugLibraries>false</UseDebugLibraries>
     <ConfigurationType>DynamicLibrary</ConfigurationType>
   </PropertyGroup>
-
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-
   <ItemDefinitionGroup>
     <ClCompile>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -25,7 +33,6 @@
         .\$(O)
       </AdditionalIncludeDirectories>
     </ClCompile>
-
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -60,7 +67,6 @@
       <ModuleDefinitionFile>.\msmpi.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
-
   <!--
        MSBuild will put the project reference libs at the end of the link.exe commandline,
        after the additional includes defined above. This causes a link error because the MPI
@@ -101,12 +107,10 @@
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
   </ItemGroup>
-
   <PropertyGroup>
     <StagingOutputPath>$(MPI_BIN_DESTINATION)</StagingOutputPath>
     <OutFileType>msmpi.dll</OutFileType>
   </PropertyGroup>
-
   <ItemDefinitionGroup>
     <PostBuildEvent>
       <Command>robocopy $(OutDir) $(BinariesBuildTypeArchDirectory)\$(MPI_SDK_DESTINATION)\lib msmpi.lib
@@ -114,14 +118,11 @@ set rc=%errorlevel%
 if not %rc%==1 exit %rce% else exit 0</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
-
   <ItemGroup>
     <ClCompile Include=".\main.cpp" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="NetworkDirect" Version="2.0.1" />
   </ItemGroup>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>
